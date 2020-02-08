@@ -64,7 +64,7 @@ const Wrapper = styled.section`
 const Month: React.FC<{
   month: string
   days: moment.Moment[]
-  events: moment.Moment[][]
+  events?: moment.Moment[][]
 }> = ({ month, days, events = [] }) => (
   <Wrapper
     style={{

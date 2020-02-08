@@ -17,21 +17,21 @@ const Wrapper = styled.div`
   margin: auto;
 `
 
-const Gantt: React.FC<{}> = () => {
+const Gantt: React.FC<{ schedule: moment.Moment[][] }> = ({
+  schedule = []
+}) => {
   const calendar = useMemo(getCalendar, [])
 
   return (
     <Wrapper>
-      {calendar.map(([month, days]) => (
-        <Month
-          key={month}
-          events={[
-            [moment().set('date', 2), moment().set('date', 20)],
-            [moment().set('date', 4), moment().set('date', 15)]
-          ]}
-          {...{ month, days }}
-        />
-      ))}
+      {calendar.map(([month, days]) => {
+        const events = [].slice.call(schedule).map(g => {
+          const f = [].slice.call(g).filter(s => s.format('MMM') === month)
+          return [f.shift(), f.pop()]
+        })
+
+        return <Month key={month} {...{ month, days }} />
+      })}
     </Wrapper>
   )
 }

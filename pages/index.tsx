@@ -1,4 +1,4 @@
-import flatten from 'lodash/flatten'
+import moment from 'moment'
 import { useCallback, useMemo, useState } from 'react'
 import RRule from 'rrule'
 import styled, { createGlobalStyle } from 'styled-components'
@@ -48,23 +48,20 @@ export default () => {
     'RRULE:FREQ=WEEKLY;INTERVAL=2;WKST=SU;COUNT=10'
   ])
 
-  const res = useMemo(
+  const schedule = useMemo(
     () =>
-      flatten(
-        inputs.map(c =>
-          RRule.fromString(c)
-            .all()
-            .map(t => new Date(t.setHours(0, 0, 0)))
-        )
+      inputs.map(c =>
+        RRule.fromString(c)
+          .all()
+          .map(t => moment(new Date(t.setHours(0, 0, 0))))
       ),
     [inputs]
   )
 
-  const onChange = useCallback(e => {
-    const $form = e.currentTarget
-    const r = []
-    const fd = new FormData($form)
+  const onChange = useCallback(({ currentTarget }) => {
+    const fd = new FormData(currentTarget)
 
+    const r = []
     for (const [, v] of fd.entries()) {
       r.push(v)
     }
@@ -76,7 +73,20 @@ export default () => {
     <>
       <GlobalStyles />
       <Wrapper>
-        <Gantt />
+        <form method="post" action="javascript:;" {...{ onChange }}>
+          {inputs.map((defaultValue, i) => (
+            <input
+              key={i}
+              type="text"
+              name={`c${i}`}
+              placeholder={`Custody ${i}`}
+              {...{ defaultValue }}
+              readOnly
+            />
+          ))}
+        </form>
+
+        <Gantt {...{ schedule }} />
       </Wrapper>
     </>
   )
