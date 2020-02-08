@@ -6,8 +6,6 @@ import { getCalendar } from '../../lib/utils'
 import Month from './Month'
 
 const Wrapper = styled.div`
-  --groups: 2;
-
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -19,7 +17,7 @@ const Wrapper = styled.div`
   margin: auto;
 `
 
-export default () => {
+const Gantt: React.FC<{}> = () => {
   const calendar = useMemo(getCalendar, [])
 
   return (
@@ -38,3 +36,4 @@ export default () => {
   )
 }
 
+export default Gantt

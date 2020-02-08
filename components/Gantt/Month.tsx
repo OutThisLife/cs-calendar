@@ -7,10 +7,8 @@ import Line from './Line'
 const Wrapper = styled.section`
   position: relative;
   display: grid;
-  grid-template-columns: repeat(var(--cols), 1fr);
-  grid-template-rows: repeat(5, 1fr);
   align-items: flex-start;
-  padding: 0 5rem 20rem;
+  padding: 0 5rem 15rem;
 
   + section {
     border-left: 4px double #000;
@@ -63,16 +61,16 @@ const Wrapper = styled.section`
   }
 `
 
-export default ({
-  month,
-  days,
-  events
-}: {
+const Month: React.FC<{
   month: string
   days: moment.Moment[]
   events: moment.Moment[][]
-}) => (
-  <Wrapper style={{ '--cols': days.length } as any}>
+}> = ({ month, days, events = [] }) => (
+  <Wrapper
+    style={{
+      gridTemplateColumns: `repeat(${days.length}, 1fr)`,
+      gridTemplateRows: 'repeat(5, 1fr)'
+    }}>
     <header>
       <h2>
         {month}, {days[0].year()}
@@ -95,8 +93,14 @@ export default ({
 
     <main>
       {events.map(([start, end], i) => (
-        <Line key={i} row={4 * i} range={[start.date(), end.date() + 1]} />
+        <Line
+          key={i}
+          row={5 * (i + 1)}
+          range={[start.date(), end.date() + 1]}
+        />
       ))}
     </main>
   </Wrapper>
 )
+
+export default Month
